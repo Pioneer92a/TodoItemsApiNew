@@ -39,7 +39,6 @@ async function getAllTasks(req, res) {
       });
     res.send(req.user.tasks);
   } catch (e) {
-    console.log(e);
     res.status(500).send(e);
   }
 }
@@ -72,7 +71,7 @@ async function updateTask(req, res) {
     if (!task) {
       return res.send({ error: 'Task id not found to update' });
     }
-    updates.forEach((update) => (task[update] = req.body[update]));
+    updates.forEach((update) => { task[update] = req.body[update]; });
     await task.save();
     return res.send(task);
   } catch (e) {
@@ -90,8 +89,8 @@ async function deleteTask(req, res) {
       res.status404.send({ error: 'Task id not found' });
     }
     res.send(task);
-  } catch (e) {
-    res.status(500).send({ e: 'Catch Error', e });
+  } catch (err) {
+    res.status(500).send({ e: 'Catch Error', err });
   }
 }
 
