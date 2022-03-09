@@ -66,11 +66,11 @@ async function updateUser(req, res) {
     return res.status(401).send({ error: 'Invalid updates' });
   }
   try {
-    updates.forEach((update) => (req.user[update] = req.body[update]));
+    updates.forEach((update) => { req.user[update] = req.body[update]; });
     await req.user.save();
-    res.status(201).send(req.user);
+    return res.status(201).send(req.user);
   } catch (e) {
-    res.status(404).send({
+    return res.status(404).send({
       e,
     });
   }
@@ -80,8 +80,8 @@ async function deleteUser(req, res) {
   try {
     await req.user.remove();
     res.send(req.user);
-  } catch (e) {
-    res.status(500).send({ e: 'Catch Error', e });
+  } catch (err) {
+    res.status(500).send({ e: 'Catch Error', err });
   }
 }
 
