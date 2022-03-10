@@ -10,7 +10,9 @@ const taskRouter = require('./routers/tasks'); // import tasks router
 
 /* Defining app to be an express app and the port to use */
 const app = express();
-const port = 8000;
+
+// import port configuration
+const { port } = require('../infrastructure/config');
 
 app.use(express.json());
 
