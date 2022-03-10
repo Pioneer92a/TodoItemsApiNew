@@ -6,4 +6,4 @@
 require('./presentation/initializeServer');
 
 // create and intialize the mongo database
-require('./infrastructure/db'); // initialize mongo database
+require('./infrastructure/db/mongodb'); // initialize mongo database
