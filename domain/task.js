@@ -22,5 +22,6 @@ const taskSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
-const Task = mongoose.model('Task', taskSchema);
+
+const Task = mongoose.model('Task', taskSchema); // attach the schema to the user model
 module.exports = Task;

@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs'); // For encrypting password
 const jwt = require('jsonwebtoken'); // For user authentication token
 const Task = require('./task');
+const { JWT_SECRET } = require('../infrastructure/config');
 
 // define schema with mongoose
 const userSchema = new mongoose.Schema({
@@ -63,6 +64,7 @@ userSchema.virtual('tasks', {
   localField: '_id',
   foreignField: 'owner',
 });
+
 // Schema Statics are methods that can be invoked directly by a Model
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
@@ -75,13 +77,15 @@ userSchema.statics.findByCredentials = async (email, password) => {
   }
   return user;
 };
+
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, '12345');
+  const token = jwt.sign({ _id: user._id.toString() }, JWT_SECRET);
   user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;
 };
+
 // Sending back user profile info, excluding some attributes
 userSchema.methods.toJSON = function () {
   const user = this;
@@ -91,6 +95,7 @@ userSchema.methods.toJSON = function () {
   delete userObject.avatar;
   return userObject;
 };
+
 // Hashing the password before saving
 userSchema.pre('save', async function (next) {
   const user = this;
@@ -99,11 +104,13 @@ userSchema.pre('save', async function (next) {
   }
   next();
 });
+
 // Remove all tasks of a user, if user is deleted
 userSchema.pre('remove', async function (next) {
   const user = this;
   await Task.deleteMany({ owner: user._id });
   next();
 });
-const User = mongoose.model('User', userSchema);
+
+const User = mongoose.model('User', userSchema); // attach the schema to the user model
 module.exports = User;
