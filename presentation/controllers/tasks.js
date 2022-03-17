@@ -59,6 +59,7 @@ async function getTaskfromId(req, res) {
 async function updateTask(req, res) {
   const updates = Object.keys(req.body);
   const allowedUpdates = ['Task', 'completed'];
+  // check the validity
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
   if (!isValidOperation) {
     return res.status(401).send({ error: 'Invalid updates' });
